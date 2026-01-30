@@ -14,7 +14,6 @@ using Printf
 using HDF5
 using JLD2
 
-using WannierIO
 using FortranFiles
 
 using XML:XML
