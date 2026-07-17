@@ -132,7 +132,7 @@ function filter_pair(int::WanIntijklR, pair::AbstractVector)
 	return filter(f, int)
 end
 #TODO sort
-function LinearAlgebra.hermitianpart(int::WanIntijklRFull{T}) where {T}
+function hermitianpart(int::WanIntijklRFull{T}) where {T}
 	return WanIntijklRHermitian(
 		int.ips, int.jps, int.iRs, int.vals,
 		int.nw, int.pair, int.pR, int.R,
