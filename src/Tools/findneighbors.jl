@@ -1,8 +1,39 @@
 """
 	findneighbors(cell::Cell, maxdist::Real; shell_tol::Real = 1e-6) -> (neighborlist, neighbordist)
 
-Find neighbors in the form of shell.
-The format of neighborlist: [ia1, ia2, Rx, Ry, Rz].
+Find the neighbors of every atom in `cell` within the distance `maxdist`, grouped into shells of equal distance.
+
+A neighbor of the atom `ia` is an atom `ja` in the unit cell translated by the lattice vector `R = (Rx, Ry, Rz)`, 
+whose position is `τ[ja] + lattice * R`, where `τ` is the reduced coordinate of `ja`. 
+Its distance to `ia` is therefore `norm(τ[ja] + lattice * R - τ[ia])`.
+
+# Arguments
+- `cell`: the unit cell. A cell storing [`ReducedCoordinates`](@ref) is converted to [`CartesianCoordinates`](@ref) internally.
+- `maxdist`: the maximum distance to search, in the same length unit as `cell.lattice`.
+- `shell_tol`: the absolute tolerance used to group distances into shells, i.e. distances differing by less than `shell_tol` belong to the same shell. Defaults to `1e-6`.
+
+# Returns
+- `neighborlist::Vector{Vector{Vector{NTuple{5, Int}}}}`: `neighborlist[ia][nsh]` collects the neighbors in the `nsh`-th shell of the atom `ia`. Each neighbor is a 5-tuple `(ia, ja, Rx, Ry, Rz)`.
+- `neighbordist::Vector{Vector{Float64}}`: `neighbordist[ia][nsh]` is the distance of the `nsh`-th shell of the atom `ia`.
+
+Both outer vectors have length `numatom(cell)`, and the shells are ordered by increasing distance, so `neighbordist[ia]` is ascending.
+
+# Notes
+- The first shell of every atom is the atom itself: `neighborlist[ia][1] == [(ia, ia, 0, 0, 0)]` with distance `0.0`. Drop `neighborlist[ia][1]` to obtain only the distinct neighbors.
+- Every pair is reported from both sides: if `(ia, ja, R)` appears in `neighborlist[ia]`, then `(ja, ia, -R)` appears in `neighborlist[ja]`.
+- For a non-periodic direction, the corresponding component of `R` is always zero.
+- The candidate lattice vectors are enumerated with [`gridindex`](@ref) inside the sphere of radius `maxdist + 4h`, 
+where `h` is the length of the longest basis vector. The cost therefore grows with `numatom(cell)` times the number of candidate vectors, so a large `maxdist` can be expensive.
+
+# Examples
+```julia
+# A 2D kagome lattice whose nearest-neighbor distance is 1.
+cell = IdealCell(:kagome)
+neighborlist, neighbordist = findneighbors(cell, 1.0)
+
+neighbordist[1]     # [0.0, ≈1.0]: the self shell, then the nearest-neighbor shell
+neighborlist[1][2]  # the 4 nearest neighbors of atom 1, as (1, ja, Rx, Ry, Rz)
+```
 """
 function findneighbors(cell::Cell{P}, maxdist::Real; shell_tol::Real = 1e-6) where {P}
 

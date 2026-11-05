@@ -16,6 +16,8 @@ The methods involving `nk` can give head term when k is zero in all periodic dir
 """
 abstract type LongRangePart <: AbstractInterAction end
 
+include("./3D.jl")
+include("./2D.jl")
 include("./Gauss.jl")
 include("./KeldyshGauss.jl")
 

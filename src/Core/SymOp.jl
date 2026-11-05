@@ -13,6 +13,13 @@ Base.:(*)(c::Number, ::ConjugateOperator) = conj(c)
 struct TimeReversalOperator end
 
 
+"""
+	SymOp
+
+A symmetry operation `(W, w)` in reduced coordinates, with integer rotation matrix `W`
+and translation `w`, that maps the crystal onto itself. The reciprocal-space operator
+`S = t * transpose(W)` and the time-reversal sign `t` (`1` or `-1`) are stored as well.
+"""
 struct SymOp
 	W::Mat3{Int}
 	w::Vec3{Float64}
@@ -58,6 +65,13 @@ end
 Base.inv(op::SymOp) = SymOp(inv(op.W), -op.W \ op.w)
 
 
+"""
+	check_group(symops::AbstractVector{SymOp}; kwargs...) -> AbstractVector{SymOp}
+
+Check that `symops` contains the identity, the inverse of every element and the product
+of every pair of elements, comparing operations with `isapprox` and the keyword
+arguments `kwargs`. Return `symops` if the check passes and throw an error otherwise.
+"""
 function check_group(symops::AbstractVector{SymOp}; kwargs...)
 	is_approx_in_symops(s1) = any(s -> isapprox(s, s1; kwargs...), symops)
 	is_approx_in_symops(one(SymOp)) || error("check_group: no identity element")
@@ -178,6 +192,12 @@ end
 
 
 # symop.S*k = k′, H(k′) = U(k)H(k)U(k)', |nk′⟩ = U(k)|nk⟩
+"""
+	LattSymOp{UT}
+
+Representation of a symmetry operation in the orbital basis: it maps the k-point `k` to
+`k′` and rotates the orbitals by the matrix `U`.
+"""
 struct LattSymOp{UT <: Number}
 	k::ReducedCoordinates{Rational{Int}}
 	k′::ReducedCoordinates{Rational{Int}}

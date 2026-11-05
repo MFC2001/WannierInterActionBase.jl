@@ -1,4 +1,7 @@
+export RESPACKU, RESPACKJ, dat_eigenvalue
 """
+	RESPACKU <: FileFormat
+
 The format of output file `dir-intW/dat.Wmat` of RESPACK, also `dir-intW/dat.Vmat`.
 
 	read(path/io, ::Type{RESPACKU}; norb::Integer) -> HR
@@ -9,6 +12,8 @@ Compared to [`RESPACKJ`](@ref), this method will read all the data in the file i
 """
 struct RESPACKU <: FileFormat end
 """
+	RESPACKJ <: FileFormat
+
 The format of output file `dir-intJ/dat.Jmat` of RESPACK, also `dir-intW/dat.Xmat`.
 
 	read(path::AbstractString/io::IO, ::Type{RESPACKJ}; norb::Integer) -> HR
@@ -19,6 +24,8 @@ Compared to [`RESPACKU`](@ref), this method will read all the data in the file e
 """
 struct RESPACKJ <: FileFormat end
 """
+	dat_eigenvalue <: FileFormat
+
 File `dir-wfn/dat.eigenvalue` contains electronic band structure, output by wan2respack or RESPACK.
 
 	read(path/io, ::Type{dat_eigenvalue}) -> Matrix{Float64}

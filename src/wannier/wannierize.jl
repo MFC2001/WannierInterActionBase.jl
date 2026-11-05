@@ -1,3 +1,9 @@
+"""
+	wannierize(band_opt::AbstractVector{<:Eigen}, u_matrix::Array{<:Number, 3}) -> Array{ComplexF64, 3}
+
+Rotate the eigenvectors of every k-point with `u_matrix[:, :, ik]` and return the Wannier
+functions as an array of size `(nbasis, nk, nw)`.
+"""
 function wannierize(band_opt::AbstractVector{<:Eigen}, u_matrix::Array{<:Number, 3})
 
 	(nbasis, nw) = size(band_opt[1].vectors)

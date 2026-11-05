@@ -1,4 +1,3 @@
-
 function Base.read(io::IO, ::Type{POSCAR}; period = Bool[1, 1, 1])::Cell
 	#first line is comment.
 	readline(io)

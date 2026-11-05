@@ -1,4 +1,4 @@
-function Plots.plot(U::HR, W::HR,
+function Plots.plot(U::AbstractHR, W::AbstractHR,
 	lattice::Union{Lattice, AbstractMatrix},
 	orblocat::AbstractVector{<:AbstractVector{<:Real}};
 	ϵ::Union{Real, Nothing} = nothing,

@@ -4,11 +4,9 @@ function Base.write(io::IO, band::Eigen, ::Type{wannier90_eig}; comment = "",
 	now = Dates.format(Dates.now(), "yyyy/m/d H:M:S")
 	comment = comment * " " * now
 
-
 	for (ii, ei) in enumerate(bandindex)
 		@printf(io, "%12u %12u %22.12f \n", ii, i, band.values[ei])
 	end
-
 
 	return nothing
 end

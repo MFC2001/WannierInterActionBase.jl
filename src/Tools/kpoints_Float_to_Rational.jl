@@ -1,3 +1,11 @@
+"""
+	kpoints_Float_to_Rational(kpoints, kgrid; atol=1e-6) -> Vector{ReducedCoordinates{Rational{Int}}}
+	kpoints_Float_to_Rational(kpoints; tol=1e-6)
+
+Convert k-points in floating-point reduced coordinates into rational reduced
+coordinates. With a `kgrid`, the denominators follow the grid size and shift; without
+it, the conversion uses `rationalize` with the tolerance `tol`.
+"""
 function kpoints_Float_to_Rational(kpoints::Vector{<:ReducedCoordinates}, kgrid; atol::Real = 1e-6)::Vector{ReducedCoordinates{Rational{Int}}}
 	k_denominator = map(1:3) do i
 		kgrid.kshift[i] == 0 ? kgrid.kgrid_size[i] : kgrid.kgrid_size[i] * 2

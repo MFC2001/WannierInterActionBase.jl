@@ -1,3 +1,10 @@
+"""
+	WignerSeitz(lattice::AbstractLattice) -> HalfspaceConvexPolyhedron
+
+Return the Wigner–Seitz cell of `lattice` (the first Brillouin zone when `lattice` is a
+reciprocal lattice) as the intersection of the half-spaces bisecting the nearest lattice
+vectors.
+"""
 function WignerSeitz(lattice::AbstractLattice)
 	neighbour = map(_neighbour_offsets_3d) do Δ
 		CartesianCoordinates(lattice * Δ)

@@ -179,6 +179,12 @@ function (pwc::PlaneWaveCoulombSlab)(::Val{:head}, qgrid::Union{AbstractVector, 
 
 	return pwc.coff .* average
 end
+"""
+	PlaneWaveCoulomb(:slab, lattice::Union{Lattice, AbstractMatrix{<:Real}}, Glist; α::Real = 0)
+
+Construct a PlaneWaveCoulomb object for 2D systems with slab truncation.
+No need to set up `α` generally, default `0` is the setting of BerkeleyGW.
+"""
 function PlaneWaveCoulomb(::Val{:slab}, lattice::Union{Lattice, AbstractMatrix{<:Real}}, Glist;
 	period = [true, true, false], α::Real = 0)
 	check_lattice_period(lattice, period)

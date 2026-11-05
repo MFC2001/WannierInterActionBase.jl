@@ -1,4 +1,3 @@
-
 function Base.write(io::IO, pband::AbstractArray{<:Real, 3}, ::Type{PBAND_dat}; comment = "",
 	kline = Kline(; line = collect(1:size(pband, 3)), name = ["Γ"], index = [1]),
 	projection::AbstractVector{String} = String[])

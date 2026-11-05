@@ -1,3 +1,10 @@
+"""
+    WannierInterActionBase
+
+A Julia package providing basic functions for `WannierInterAction.jl` and `WannierExcitonModel.jl`.
+
+See also [`FileFormat`](@ref), [`AbstractInterAction`](@ref), etc.
+"""
 module WannierInterActionBase
 
 using LinearAlgebra
@@ -23,6 +30,7 @@ using Printf
 using HDF5
 using JLD2
 using NCDatasets
+using NPZ
 
 using FortranFiles
 using XML: XML
@@ -36,9 +44,9 @@ include("./IO/IO.jl")
 include("./Tools/Tools.jl")
 
 function __init__()
-	@require FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341" include("../ext/FFTW/FFTW.jl")
-	@require Struve = "bbbc800e-c7bf-11e8-107b-9b6d1d23829a" include("../ext/Struve.jl")
-	@require Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80" include("../ext/Plots/Plots.jl")
+    @require FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341" include("../ext/FFTW/FFTW.jl")
+    @require Struve = "bbbc800e-c7bf-11e8-107b-9b6d1d23829a" include("../ext/Struve.jl")
+    @require Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80" include("../ext/Plots/Plots.jl")
 end
 
 end

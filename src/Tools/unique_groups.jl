@@ -1,3 +1,10 @@
+"""
+	unique_groups(data) -> (keys, groups)
+	unique_groups(F, data) -> (keys, groups)
+
+Group the indices of `data` by value, or by `F(x)`, and return the unique keys together
+with the corresponding index vectors.
+"""
 function unique_groups(data)
 	d = Dict{eltype(data), Vector{Int}}()
 	for (i, x) in enumerate(data)

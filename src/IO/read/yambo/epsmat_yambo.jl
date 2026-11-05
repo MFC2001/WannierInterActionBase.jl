@@ -7,6 +7,7 @@ function Base.read(epsfolder::AbstractString, ::Type{epsmat_yambo};
 	qgrid::Union{MonkhorstPack, Nothing} = nothing, qgrid_atol::Real = 1e-6,
 	eps0folder = nothing, eps0_ωindex = :default, eps0_q̂₀ = nothing,
 )
+	# At present, only 3D case with multipole correction in evaluating interaction need this direction!
 
 	isdir(epsfolder) || error("$epsfolder isn't found!")
 
@@ -29,7 +30,7 @@ function Base.read(epsfolder::AbstractString, ::Type{epsmat_yambo};
 	rlattice = reciprocal(lattice)
 	rldot = transpose(parent(rlattice)) * parent(rlattice)
 	# in Å.
-	lattice_Å = Lattice(transpose(db1["LATTICE_VECTORS"][:, :] .* bohr_radius))
+	lattice_Å = Lattice(transpose(db1["LATTICE_VECTORS"][:, :] .* a₀))
 
 	symmat = db1["SYMMETRY"][:, :, :]
 	nsym = size(symmat, 3)

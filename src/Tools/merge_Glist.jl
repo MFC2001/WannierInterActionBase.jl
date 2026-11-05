@@ -1,3 +1,10 @@
+"""
+	merge_Glist(Glists::Vector{ReducedCoordinates{Int}}...; rldot=nothing, Gidx=true)
+
+Return the sorted union of the given G-lists, ordered by `G ⋅ G` or, if `rldot` is given,
+by `G ⋅ (rldot * G)`. With `Gidx = true`, also return the index vectors that map each
+input list into the merged list.
+"""
 function merge_Glist(Glists::Vector{ReducedCoordinates{Int}}...;
 	rldot::Union{AbstractMatrix{<:Real}, Nothing} = nothing, Gidx::Bool = true)
 

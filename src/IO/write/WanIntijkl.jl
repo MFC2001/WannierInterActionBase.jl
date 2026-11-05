@@ -1,4 +1,3 @@
-
 function Base.write(io::IO, intvalue::AbstractArray{VT, 4}, ::Type{WanIntijkl0}; comment = "") where {VT <: Number}
 	now = Dates.format(Dates.now(), "yyyy/m/d H:M:S")
 	comment = comment * " " * now
@@ -15,7 +14,7 @@ function Base.write(io::IO, intvalue::AbstractArray{VT, 4}, ::Type{WanIntijkl0};
 	return nothing
 end
 
-function Base.write(io::IO, int::WanIntijklR{T}, ::Type{WanIntijklR}; comment = "") where {T <: Number}
+function Base.write(io::IO, int::PairIntHR{T}, ::Type{PairIntHR}; comment = "") where {T <: Number}
 	now = Dates.format(Dates.now(), "yyyy/m/d H:M:S")
 	comment = comment * " " * now
 

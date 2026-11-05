@@ -1,3 +1,9 @@
+"""
+	_kline_shiftΓ!(kline::Kline; atol=1e-6, rtol=1e-5) -> Kline
+
+Move the Γ points (zeros) of `kline` slightly off the origin, in place, along the
+direction of the neighbouring k-points or their midpoint, and return `kline`.
+"""
 function _kline_shiftΓ!(kline::Kline; atol::Real = 1e-6, rtol::Real = 1e-5)
 	ΓI = findall(iszero, kline)
 	isempty(ΓI) && kline

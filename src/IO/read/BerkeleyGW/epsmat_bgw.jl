@@ -50,15 +50,15 @@ function Base.read(epsmat::AbstractString, ::Type{epsmat_bgw};
 	end
 
 	#crystal
-	alat = epsmat["mf_header/crystal/alat"][] * bohr_radius
+	alat = epsmat["mf_header/crystal/alat"][] * a₀
 	lattice = Lattice(epsmat["mf_header/crystal/avec"][] * alat)
-	rlattice = reciprocal(lattice) # ReciprocalLattice(epsmat["mf_header/crystal/bvec"][] * bohr_radius)
+	rlattice = reciprocal(lattice) # ReciprocalLattice(epsmat["mf_header/crystal/bvec"][] * a₀)
 	# ldot = parent(lattice)
-	# ldot = Mat3(transpose(ldot) * ldot) # Mat3(epsmat["mf_header/crystal/adot"][] * bohr_radius^2)
+	# ldot = Mat3(transpose(ldot) * ldot) # Mat3(epsmat["mf_header/crystal/adot"][] * a₀^2)
 	rldot = parent(rlattice)
-	rldot = Mat3(transpose(rldot) * rldot) # Mat3(epsmat["mf_header/crystal/bdot"][] * bohr_radius^2)
-	# Ω = det(parent(lattice)) # epsmat["mf_header/crystal/celvol"][] * bohr_radius^3
-	# rΩ = det(parent(rlattice)) # epsmat["mf_header/crystal/recvol"][] * bohr_radius^3
+	rldot = Mat3(transpose(rldot) * rldot) # Mat3(epsmat["mf_header/crystal/bdot"][] * a₀^2)
+	# Ω = det(parent(lattice)) # epsmat["mf_header/crystal/celvol"][] * a₀^3
+	# rΩ = det(parent(rlattice)) # epsmat["mf_header/crystal/recvol"][] * a₀^3
 
 	#symmetry
 	nsym = epsmat["mf_header/symmetry/ntran"][]

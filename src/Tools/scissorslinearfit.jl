@@ -17,8 +17,8 @@ function scissorslinearfit(band::AbstractMatrix{<:Real}, vindex, cindex;
 )
 
 	newband = similar(band, Float64)
-	newband[vindex, :] .= band[vindex, :] .+ evs .+ evdel .* (band[vindex, :] .- ev0)
-	newband[cindex, :] .= band[cindex, :] .+ ecs .+ ecdel .* (band[cindex, :] .- ec0)
+	isempty(vindex) || (newband[vindex, :] .= band[vindex, :] .+ evs .+ evdel .* (band[vindex, :] .- ev0))
+	isempty(cindex) || (newband[cindex, :] .= band[cindex, :] .+ ecs .+ ecdel .* (band[cindex, :] .- ec0))
 
 	return newband
 end

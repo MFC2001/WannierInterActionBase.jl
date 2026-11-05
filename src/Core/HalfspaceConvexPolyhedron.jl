@@ -57,11 +57,35 @@ function point_in_halfspaces_detail(
 end
 
 Base.in(p::AbstractVector, poly::HalfspaceConvexPolyhedron) = point_in_halfspaces(p, poly)
+"""
+	is_inside(p::AbstractVector, poly::HalfspaceConvexPolyhedron; tol = sqrt(eps(Float64))) -> Bool
+
+Return `true` if the point `p` lies inside the closed polyhedron `poly`, so that points on
+the boundary count as inside. The keyword argument `tol` relaxes the half-space test.
+"""
 is_inside(p::AbstractVector, poly::HalfspaceConvexPolyhedron; kwargs...) =
 	point_in_halfspaces(p, poly; kwargs...)
+"""
+	is_interior(p::AbstractVector, poly::HalfspaceConvexPolyhedron; tol = eps(Float64)) -> Bool
+
+Return `true` if the point `p` lies strictly inside the polyhedron `poly`, so that points
+on the boundary are excluded.
+"""
 is_interior(p::AbstractVector, poly::HalfspaceConvexPolyhedron; tol = eps(Float64)) =
 	point_in_halfspaces(p, poly; open_set = true, tol)
+"""
+	is_inside_detail(p::AbstractVector, poly::HalfspaceConvexPolyhedron; tol = sqrt(eps(Float64))) -> (Bool, V)
+
+Like [`is_inside`](@ref), but return the tuple `(inside, normal)`, where `normal` is the
+normal of the first violated half-space, or the zero vector when `p` is inside.
+"""
 is_inside_detail(p::AbstractVector, poly::HalfspaceConvexPolyhedron; kwargs...) =
 	point_in_halfspaces_detail(p, poly; kwargs...)
+"""
+	is_interior_detail(p::AbstractVector, poly::HalfspaceConvexPolyhedron; tol = eps(Float64)) -> (Bool, V)
+
+Like [`is_interior`](@ref), but return the tuple `(inside, normal)`, where `normal` is the
+normal of the first violated half-space, or the zero vector when `p` is strictly inside.
+"""
 is_interior_detail(p::AbstractVector, poly::HalfspaceConvexPolyhedron; tol = eps(Float64)) =
 	point_in_halfspaces_detail(p, poly; open_set = true, tol)

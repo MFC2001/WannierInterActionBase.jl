@@ -4,7 +4,7 @@ export PeriodicGridIndex
 
 `grid` is a collection of `Integer`.
 
-input: real value of grid point;
+input: value of grid point;
 output: the index of equivelent point.
 The equivelent point is in the range of 0:Ng-1, but we return the index which is in the range of 1:Ng.
 

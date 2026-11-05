@@ -1,6 +1,6 @@
 export ReciprocalCoulomb
 """
-	abstract type ReciprocalCoulomb <: AbstractCoulomb end
+	ReciprocalCoulomb <: AbstractCoulomb
 
 The Coulomb potential defined in reciprocal space.
 """

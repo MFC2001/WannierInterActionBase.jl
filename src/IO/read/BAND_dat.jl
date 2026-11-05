@@ -1,4 +1,3 @@
-
 function Base.read(io::IO, ::Type{BAND_dat}; readkname::Bool = false, smoothband::Bool = false)
 	#first line is comment.
 	readline(io)

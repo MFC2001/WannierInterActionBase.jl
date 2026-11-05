@@ -24,7 +24,7 @@ function Base.read(io::IO, ::Type{QEwfc_dat}; convert = "native")
 	rlattice = read(io, (Float64, 3, 3))
 
 	xk = ReducedCoordinates{Float64}(rlattice \ xk)
-	rlattice = ReciprocalLattice(rlattice / bohr_radius)
+	rlattice = ReciprocalLattice(rlattice / a₀)
 
 	G = map(ReducedCoordinates{Int}, eachcol(read(io, (Int32, 3, igwx))))
 
@@ -58,7 +58,7 @@ function Base.read(path::AbstractString, ::Type{QEwfc_hdf5})
 	rlattice = [bg1 bg2 bg3]
 
 	xk = ReducedCoordinates{Float64}(rlattice \ xk)
-	rlattice = ReciprocalLattice(rlattice / bohr_radius)
+	rlattice = ReciprocalLattice(rlattice / a₀)
 
 	evc = wfc["evc"][]
 	n = npol * igwx

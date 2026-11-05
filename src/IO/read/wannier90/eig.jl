@@ -1,4 +1,3 @@
-
 function Base.read(io::IO, ::Type{wannier90_eig})
 
 	data = readdlm(io)

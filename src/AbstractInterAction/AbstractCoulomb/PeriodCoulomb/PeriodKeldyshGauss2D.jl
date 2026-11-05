@@ -108,7 +108,9 @@ function _RealKeldyshGauss2DPeriod_kG(rlattice, kgrid, xyindex, α, δ)
 
 	kG2_max = -4 * α * α * log(δ)
 	Gnorm_max = sqrt(kG2_max) + norm(parent(rlattice))
-	Ggrid = gridindex(rlattice, Gnorm_max, xyindex, Val(2))
+	period = [false, false, false]
+    period[xyindex] .= true
+	Ggrid = gridindex(rlattice, Gnorm_max, period)
 	allkG = reshape([k + G for k in kgrid, G in Ggrid], :)
 	filter!(kG->_ispositive_vector(kG; atol = dk_atol), allkG)
 	allkG_norm2 = map(kG -> kG ⋅ (rldot * kG), allkG)

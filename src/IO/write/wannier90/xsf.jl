@@ -1,10 +1,13 @@
 function Base.write(io::IO, wannier::wannier90_xsf{T}, ::Type{wannier90_xsf}; comment = "", value = real) where {T <: Number}
 
 	if T <: Complex
+		max_imag = maximum(wannier.value) do v
+			abs(imag(v))
+		end
 		max_imag_real_ratio = maximum(wannier.value) do v
 			abs(imag(v)) < 1e-6 ? 0.0 : abs(imag(v) / real(v))
 		end
-		comment = comment * " ; Maximum Im/Re Ratio = $max_imag_real_ratio"
+		comment = comment * "; Maximum Im = $max_imag ; Maximum Im/Re Ratio = $max_imag_real_ratio"
 	end
 
 	out_value = value.(wannier.value)

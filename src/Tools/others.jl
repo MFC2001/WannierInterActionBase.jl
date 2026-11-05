@@ -1,13 +1,28 @@
 
 # useful for reduced coordinates.
+"""
+	_is_approx_integer(r; atol=1e-6) -> Bool
+
+Return `true` if every component of `r` is an integer within `atol`.
+"""
 _is_approx_integer(r; atol = 1e-6) = all(ri -> abs(ri - round(ri)) ≤ atol, r)
 
 # function calc_vecangle(v1::AbstractVector{<:Real}, v2::AbstractVector{<:Real})::Real
 # 	return atan(norm(v1 × v2), v1 ⋅ v2)
 # end
+"""
+	norm2(v) -> Real
+
+Return the squared Euclidean norm `v ⋅ v` of `v`.
+"""
 @inline norm2(v) = v ⋅ v
 
-# used for print(::Hopping)
+"""
+	subscriptnumber(i::Int) -> String
+
+Return `i` written with Unicode subscript digits, with a leading minus sign for negative
+numbers.
+"""
 function subscriptnumber(i::Int)
 	if i < 0
 		c = [Char(0x208B)]
@@ -20,6 +35,12 @@ function subscriptnumber(i::Int)
 	return join(c)
 end
 
+"""
+	superscriptnumber(i::Int) -> String
+
+Return `i` written with Unicode superscript digits, with a leading minus sign for
+negative numbers.
+"""
 function superscriptnumber(i::Int)
 	if i < 0
 		c = [Char(0x207B)]

@@ -1,3 +1,10 @@
+"""
+	_eigen2val(eigens::AbstractArray{<:Eigen}) -> Matrix
+	_eigen2val(eigen::Eigen) -> Vector
+
+Return the eigenvalues of `eigen`, or the eigenvalues of every `Eigen` object in
+`eigens` as a matrix whose columns are padded with `NaN` when the lengths differ.
+"""
 function _eigen2val(eigens::AbstractArray{T}) where {T <: Eigen}
 	isempty(eigens) && return Matrix{Int}(undef, 0, 0)
 	len_values = [length(e.values) for e in eigens]
@@ -10,6 +17,6 @@ function _eigen2val(eigens::AbstractArray{T}) where {T <: Eigen}
 	end
 	return value
 end
-function _eigen2val(eigens::T) where {T <: Eigen}
-	return eigens.values
+function _eigen2val(eigen::T) where {T <: Eigen}
+	return eigen.values
 end

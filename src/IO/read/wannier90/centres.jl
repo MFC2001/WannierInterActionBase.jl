@@ -1,4 +1,3 @@
-
 function Base.read(io::IO, ::Type{wannier90_centres})
 
 	N = parse(Int, readline(io))

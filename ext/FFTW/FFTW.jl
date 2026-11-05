@@ -1,3 +1,3 @@
 
-# include("./BoxTruncatedCoulomb.jl")
-# include("./WireTruncatedCoulomb.jl")
+include("./PlaneWaveCoulombBox.jl")
+include("./PlaneWaveCoulombWire.jl")

@@ -13,59 +13,56 @@ include("./KeldyshGauss.jl")
 Try to apply a mirror correction to `U`.
 
 - `sym` is the symbol of the mirror correction method, currently supports `:Gauss_optim`, `:Gauss`, `:KeldyshGauss_optim`, `:KeldyshGauss`.
-- `U::Union{HR, AbstractReciprocalHoppings}`
+- `U::AbstractHR`
 - `kgrid::Union{MonkhorstPack, RedKgrid, AbstractVector{<:Integer}, NTuple{3, <:Integer}}`
 - `lattice::Union{Lattice, AbstractMatrix{<:Real}}`
 """
-function MirrorCorrection(sym::Symbol, U::Union{HR, AbstractReciprocalHoppings},
-	kgrid::Union{MonkhorstPack, RedKgrid, AbstractVector{<:Integer}, NTuple{3, <:Integer}},
-	lattice::Union{Lattice, AbstractMatrix{<:Real}}, orblocat::AbstractVector{V};
-	outfile::Union{Nothing, AbstractString} = nothing,
-	logfile::AbstractString = isnothing(outfile) ? "./MirrorCorrection.log" : joinpath(dirname(outfile), "MirrorCorrection.log"),
-	kwargs...,
+function MirrorCorrection(sym::Symbol, U::AbstractHR,
+    kgrid::Union{MonkhorstPack,RedKgrid,AbstractVector{<:Integer},NTuple{3,<:Integer}},
+    lattice::Union{Lattice,AbstractMatrix{<:Real}}, orblocat::AbstractVector{V};
+    outfile::Union{Nothing,AbstractString}=nothing,
+    logfile::AbstractString=isnothing(outfile) ? "./MirrorCorrection.log" : joinpath(dirname(outfile), "MirrorCorrection.log"),
+    kwargs...,
 ) where {V}
 
-	logio = get_logio(logfile)
-	original_stdout = stdout
-	redirect_stdout(logio)
-	_exit_flush(logio)
+    logio = get_logio(logfile)
+    original_stdout = stdout
+    redirect_stdout(logio)
+    _exit_flush(logio)
 
-	# preprocessing
-	if U isa HR
-		U = ReciprocalHoppings(U)
-	end
-	if kgrid isa AbstractVector || kgrid isa NTuple
-		@assert all(>(0), kgrid) "kgrid should be positive"
-		kgrid = RedKgrid(MonkhorstPack(kgrid[1], kgrid[2], kgrid[3]))
-	else
-		kgrid = RedKgrid(MonkhorstPack(kgrid.kgrid_size))
-	end
-	lattice = Lattice(parent(lattice))
-	orblocat = collect(orblocat)
-	if V <: CartesianCoordinates
-		orblocat = map(orblocat) do r
-			lattice \ r
-		end
-	elseif V <: AbstractVector
-		orblocat = map(orblocat) do r
-			ReducedCoordinates(r)
-		end
-	else
-		error("orblocat should be a vector of vector!")
-	end
+    # preprocessing
+    U = HRFull(U)
+    if kgrid isa AbstractVector || kgrid isa NTuple
+        kgrid = RedKgrid(MonkhorstPack(kgrid))
+    else
+        kgrid = RedKgrid(MonkhorstPack(kgrid.kgrid_size))
+    end
+    lattice = Lattice(parent(lattice))
+    orblocat = collect(orblocat)
+    if V <: CartesianCoordinates
+        orblocat = map(orblocat) do r
+            lattice \ r
+        end
+    elseif V <: AbstractVector
+        orblocat = map(orblocat) do r
+            ReducedCoordinates(r)
+        end
+    else
+        error("orblocat should be a vector of vector!")
+    end
 
-	# calculate
-	result = MirrorCorrection(Val(sym), U, kgrid, lattice, orblocat; kwargs...)
+    # calculate
+    result = MirrorCorrection(Val(sym), U, kgrid, lattice, orblocat; kwargs...)
 
-	redirect_stdout(original_stdout)
-	close(logio)
+    redirect_stdout(original_stdout)
+    close(logio)
 
-	if !isnothing(outfile)
-		mkpath(dirname(outfile))
-		jldsave(outfile; result...)
-	end
+    if !isnothing(outfile)
+        mkpath(dirname(outfile))
+        jldsave(outfile; result...)
+    end
 
-	return result
+    return result
 end
 
 # 虽然增加高斯展宽后的库伦势在实空间会很快趋于点电荷的结果，但是转换至有限大周期体系中的形式后，高斯展宽参数会体现出较为明显的影响，这为依据远距离的样本点进行参数优化提供了理论依据。

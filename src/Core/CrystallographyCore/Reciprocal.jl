@@ -43,6 +43,11 @@ function reciprocal(lattice::ReciprocalLattice)
 	return 2π * inv(Ω⁻¹) * Lattice(hcat(cross(𝐛⁻¹, 𝐜⁻¹), cross(𝐜⁻¹, 𝐚⁻¹), cross(𝐚⁻¹, 𝐛⁻¹)))
 end
 
+"""
+	isreciprocal(a::AbstractLattice, b::AbstractLattice) -> Bool
+
+Return `true` if the lattice `a` is reciprocal to `b`, i.e. if `a' * b ≈ I`.
+"""
 isreciprocal(a::ReciprocalLattice, b::Lattice) = parent(a)' * parent(b) ≈ I
 isreciprocal(a::Lattice, b::ReciprocalLattice) = isreciprocal(b, a)
 

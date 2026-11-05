@@ -1,3 +1,9 @@
+"""
+	epsmean(::Type{epsmat_yambo}, outfile, epsfile, epsfiles...; format=:netcdf4) -> Nothing
+
+Average the dielectric matrices stored in the yambo `epsmat` file `epsfile` and in the
+additional files `epsfiles`, and write the result to `outfile` as a NetCDF file.
+"""
 function epsmean(::Type{epsmat_yambo}, outfile::AbstractString, epsfile::AbstractString, epsfiles::AbstractString ...;
 	format::Symbol = :netcdf4,
 )

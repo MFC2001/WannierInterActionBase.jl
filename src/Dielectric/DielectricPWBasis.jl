@@ -129,6 +129,12 @@ end
 function (eps::DielectricPWBasis{ET})(::Val{:head}, iq::Int, ::Colon) where {ET}
 	return eps(Val(:head), iq, 1:eps.nω)
 end
+"""
+	eps0sym(eps::DielectricPWBasis)
+
+Return the symmetrized dielectric matrix at `q = 0`, following the BerkeleyGW
+convention. The implementation is not finished yet and currently throws an error.
+"""
 function eps0sym(eps::DielectricPWBasis{ET}) where {ET}
 	#TODO
 	# 见BerkeleyGW.
@@ -183,7 +189,7 @@ function DielectricPWBasis(matrices, qirre, Glist_qirre, matrices_q0, q₀, Glis
 	for iq₀ in 1:nq₀
 		normq₀ = sqrt(q₀[iq₀] ⋅ q₀[iq₀])
 		if isapprox(normq₀, 1; atol = 1e-2)
-			# q₀[iq₀] is a unit vector.
+			# q₀[iq₀] is a unit vector, only represents direction.
 			q₀_new[iq₀] = CartesianCoordinates{Float64}(0, 0, 0)
 			q̂₀[iq₀] = CartesianCoordinates{Float64}(q₀[iq₀] ./ normq₀)
 		elseif isapprox(normq₀, 0; atol = 1e-8)

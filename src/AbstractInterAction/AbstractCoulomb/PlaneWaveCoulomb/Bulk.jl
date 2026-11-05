@@ -61,6 +61,11 @@ function (pwc::PlaneWaveCoulombBulk)(::Val{:head}, qgrid::Union{AbstractVector, 
 
 	return pwc.coff * average
 end
+"""
+	PlaneWaveCoulomb(:bulk, lattice::Union{Lattice, AbstractMatrix{<:Real}}, Glist)
+
+Construct a PlaneWaveCoulomb object for 3D systems.
+"""
 function PlaneWaveCoulomb(::Val{:bulk}, lattice::Union{Lattice, AbstractMatrix{<:Real}}, Glist)
 	lattice = Lattice(parent(lattice))
 	rlattice = reciprocal(lattice)

@@ -36,7 +36,7 @@ function Base.read(io::IO, ::Type{wannier90_chk}; convert = "native")
 	num_kpts = Int(read(io, Int32))
 	mp_grid = Int.(read(io, (Int32, 3)))
 	kdirect = read(io, (Float64, 3, num_kpts))
-	kdirect = map(Vec3{Float64}, eachcol(kdirect))
+	kdirect = map(ReducedCoordinates{Float64}, eachcol(kdirect))
 
 	# 6. 读取其他参数
 	nntot = Int(read(io, Int32))
@@ -74,6 +74,15 @@ function Base.read(io::IO, ::Type{wannier90_chk}; convert = "native")
 		u_matrix[ik] = u_matrix_data[:, :, ik]
 	end
 
+	if have_disentangled
+		u_matrix_total = Vector{Matrix{ComplexF64}}(undef, num_kpts)
+		for ik in 1:num_kpts
+			u_matrix_total[ik] = u_matrix_opt[ik] * u_matrix[ik]
+		end
+	else
+		u_matrix_total = u_matrix
+	end
+
 	# 9. 读取重叠矩阵m_matrix
 	m_matrix = read(io, (ComplexF64, num_wann, num_wann, nntot, num_kpts))
 
@@ -91,8 +100,8 @@ function Base.read(io::IO, ::Type{wannier90_chk}; convert = "native")
 		mp_grid, kdirect, nntot, num_wann,
 		checkpoint,
 		have_disentangled,
-		omega_invariant, lwindow, ndimwin, u_matrix_opt,
-		u_matrix, m_matrix,
+		omega_invariant, lwindow, ndimwin, 
+		u_matrix_opt, u_matrix, u_matrix_total, m_matrix,
 		wannier_centres, wannier_spreads,
 	)
 end

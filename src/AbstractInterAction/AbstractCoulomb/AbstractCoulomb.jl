@@ -1,8 +1,8 @@
 
 """
-	abstract type AbstractCoulomb <: AbstractInterAction end
+	AbstractCoulomb <: AbstractInterAction
 
-Abstract type for Coulomb interaction potentials.
+Coulomb interaction potentials.
 """
 abstract type AbstractCoulomb <: AbstractInterAction end
 

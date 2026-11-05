@@ -1,10 +1,11 @@
 export _eigen2val, _exit_flush, _ispositive_vector, _isnegative_vector, _kline_shiftΓ!, _split_tasks,
-	epsmean, findneighbors, fold2FBZ, get_logio, gridindex, is_diagonal, kgridmap, kpoints_Float_to_Rational, merge_Glist,
-	_is_approx_integer, norm2, subscriptnumber, superscriptnumber, phase_normalize, phase_normalize!, scissorslinearfit, tail_mean, longrange_ϵ,
-	unique_groups, WignerSeitz
+    epsmean, findneighbors, fold2FBZ, fractional_bounds, get_logio, gridindex, HK2HR, is_diagonal, kgridmap, kpoints_Float_to_Rational, merge_Glist,
+    _is_approx_integer, norm2, subscriptnumber, superscriptnumber, phase_normalize, phase_normalize!, plane_frame,
+    scissorslinearfit, tail_mean, unique_groups, WignerSeitz
 
 include("./_eigen2val.jl")
 include("./_exit_flush.jl")
+include("./_fold_by_grid.jl")
 include("./_ispositive_vector.jl")
 include("./_kline_shiftGamma!.jl")
 include("./_split_tasks.jl")
@@ -12,8 +13,10 @@ include("./epsmean.jl")
 include("./findfirst.jl")
 include("./findneighbors.jl")
 include("./fold2FBZ.jl")
+include("./fractional_bounds.jl")
 include("./get_logio.jl")
 include("./gridindex.jl")
+include("./HK2HR.jl")
 include("./is_diagonal.jl")
 include("./kgridmap.jl")
 include("./kpoints_Float_to_Rational.jl")
@@ -22,6 +25,7 @@ include("./merge_Glist.jl")
 include("./others.jl")
 include("./parentdir.jl")
 include("./phase_normalize.jl")
+include("./plane_frame.jl")
 include("./scissorslinearfit.jl")
 include("./tail_mean.jl")
 include("./unique_groups.jl")

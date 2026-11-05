@@ -1,4 +1,10 @@
 export WilsonLoop, WilsonLoopWaveGetter, Index_VecOrMat
+"""
+	WilsonLoopWaveGetter{Nstates}
+
+Abstract accessor for the cell-periodic wavefunctions along a loop: calling a getter with
+a k-point returns the states at that k-point, and `Nstates` is the number of states.
+"""
 abstract type WilsonLoopWaveGetter{Nstates} end
 # function AbstractWaveGetter(kpoint) end
 
@@ -6,7 +12,16 @@ abstract type WilsonLoopWaveGetter{Nstates} end
 	
 # end
 
-# 这里只是计算了一个路径，如果需要路径是环路，需要loop[end] == loop[1]
+# 这里只是计算了一个路径，如果需要路径是环路，需要用户自行保证loop[end] == loop[1]。
+"""
+	WilsonLoop(loop::AbstractVector, u_getter::WilsonLoopWaveGetter) -> Number or Matrix
+
+Return the Wilson loop accumulated along the k-point path `loop`, with `u_getter`
+providing the wavefunctions at every k-point. For a single state the product of overlaps
+is normalized to a phase; for several states each overlap matrix is projected onto the
+unitary group by an SVD. The path is open, so a closed loop requires
+`loop[end] == loop[1]`.
+"""
 function WilsonLoop(loop::AbstractVector, u_getter::WilsonLoopWaveGetter{1})
 	u1 = u_getter(loop[1])
 	W = 1

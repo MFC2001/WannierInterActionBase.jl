@@ -1,4 +1,3 @@
-
 function Base.read(io::IO, ::Type{WanIntijkl0}; readimag::Bool = true)
 
 	#first line is comment.
@@ -25,7 +24,7 @@ function Base.read(io::IO, ::Type{WanIntijkl0}; readimag::Bool = true)
 	return intvalue
 end
 
-function Base.read(io::IO, ::Type{WanIntijklR}; readimag::Bool = false, atol::Real = 1e-6)
+function Base.read(io::IO, ::Type{PairIntHR}; readimag::Bool = false, atol::Real = 1e-6)
 	#first line is comment.
 	readline(io)
 
@@ -79,7 +78,7 @@ function Base.read(io::IO, ::Type{WanIntijklR}; readimag::Bool = false, atol::Re
 		value = real(value)
 	end
 
-	int = WanIntijklR(nw, npR, pR, np, pair, nR, R, nv, ips, jps, iRs, value)
+	int = PairIntHR(nw, npR, pR, np, pair, nR, R, nv, ips, jps, iRs, value)
 
 	return prune(int, atol)
 end

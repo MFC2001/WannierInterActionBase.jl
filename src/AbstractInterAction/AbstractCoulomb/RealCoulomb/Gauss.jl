@@ -23,7 +23,8 @@ V(r) = \\frac{e²}{4πϵ₀ϵ} \\frac{erf(α|r|)}{|r|}
 
 unit: r(Å), V(eV), α(1/Å), ϵ(dimensionless).
 
-rcut > 0.3时，`α = 4.5 / rcut` 可以保证 Gauss potential 在 `rcut` 外收敛至 bare Coulomb potential, 以1e-8的精度.
+For `rcut > 0.3`, `α = 4.5 / rcut` ensures that the Gauss potential converges to the
+bare Coulomb potential outside `rcut` to within `1e-8`.
 
 # Example
 

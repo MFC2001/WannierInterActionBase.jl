@@ -1,10 +1,9 @@
-
 function Base.write(io::IO, cell::Cell, ::Type{wannier90_win}; comment = "",
 	num_iter,
 	num_print_cycles = 20,
 	search_shells = 100,
 	shell_list = nothing,
-	dis_num_iter,
+	dis_num_iter = 0,
 	dis_conv_tol = 1e-12,
 	dis_conv_window = 5,
 	exclude_bands = nothing,
@@ -25,8 +24,8 @@ function Base.write(io::IO, cell::Cell, ::Type{wannier90_win}; comment = "",
 	bands_num_points = 30,
 	bands_plot_format = "gnuplot xmgrace",
 	kpoint_path = nothing,
-	grid,
-	kpoints = nothing,
+	mp_grid,
+	kpoints,
 )
 
 	if num_bands < num_wann
@@ -171,15 +170,7 @@ begin kpoint_path",
 		error("Wrong cell.")
 	end
 
-	if grid isa MonkhorstPack
-		kpoints = RedKgrid(grid).kdirect
-	elseif grid isa RedKgrid
-		kpoints = grid.kdirect
-	else
-		error("Wrong grid!")
-	end
-
-	@printf(io, "mp_grid = %6u %6u %6u \n", grid.kgrid_size...)
+	@printf(io, "mp_grid = %6u %6u %6u \n", mp_grid...)
 	@printf(io, "begin kpoints\n")
 	for k in kpoints
 		@printf(io, "%20.12f %20.12f %20.12f \n", k...)

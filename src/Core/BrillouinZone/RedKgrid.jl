@@ -22,7 +22,7 @@ julia> kgrid[2]
 
 ```
 """
-struct RedKgrid <: AbstractBrillouinZone
+@struct_hash_equal_isequal struct RedKgrid <: AbstractBrillouinZone
 	kdirect::Vector{ReducedCoordinates{Rational{Int}}}
 	kgrid_size::Vec3{Int}
 	kshift::Vec3{Rational{Int}}

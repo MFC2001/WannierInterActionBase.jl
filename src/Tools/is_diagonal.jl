@@ -1,3 +1,8 @@
+"""
+	is_diagonal(A) -> Bool
+
+Return `true` if `A` is a square diagonal matrix.
+"""
 function is_diagonal(A)::Bool
 	(m, n) = size(A)
 	(m == n) || return false  # 非方阵直接不是对角阵

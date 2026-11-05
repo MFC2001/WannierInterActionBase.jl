@@ -105,7 +105,17 @@ function check_lattice_period(lattice, period)
 	return nothing
 end
 
+"""
+	atomnames(cell::Cell) -> Vector
+
+Return the unique atom names in `cell`.
+"""
 atomnames(cell::Cell) = unique(cell.name)
+"""
+	numatom(cell::Cell) -> Int
+
+Return the number of atoms in `cell`.
+"""
 numatom(cell::Cell) = length(cell.location)
 Lattice(cell::Cell) = cell.lattice
 
@@ -130,13 +140,11 @@ function Base.convert(cell::Cell{ReducedCoordinates{P}}) where {P}
 	return Cell{CartesianCoordinates{Float64}}(cell.lattice, location, copy(cell.name), copy(cell.index), cell.period)
 end
 function Base.convert(cell::Cell{CartesianCoordinates{P}}) where {P}
-
 	location = map(x -> cell.lattice \ x, cell.location)
-
 	return Cell{ReducedCoordinates{Float64}}(cell.lattice, location, copy(cell.name), copy(cell.index), cell.period)
 end
 function Base.convert(::Type{Cell{P}}, cell::Cell) where {P}
-	return Cell{P}(cell.lattice, P.(location), copy(cell.name), copy(cell.index), cell.period)
+	return Cell{P}(cell.lattice, P.(cell.location), copy(cell.name), copy(cell.index), cell.period)
 end
 function Base.zero(::Type{Cell{P}}) where {P}
 	return Cell{P}(one(Lattice{Float64}), P[], String[], Int[], Bool[1, 1, 1])

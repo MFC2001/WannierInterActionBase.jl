@@ -1,14 +1,22 @@
 struct RealCoulombPoint <: RealCoulomb
-	ϵ::Float64
-	coff::Float64
+    ϵ::Float64
+    coff::Float64
+    # for erfc
+    α::Float64
+    # for keldysh
+    r₀::Float64
+    ϵ₁::Float64
+    ϵ₂::Float64
+    # for soft-core
+    a::Float64
 end
-function (v::RealCoulombPoint)(r::AbstractVector{<:Real}; atol::Real = 1e-10)::Float64
-	r = norm(r)
-	return r ≤ atol ? 0.0 : v.coff / r
+function (v::RealCoulombPoint)(r::AbstractVector{<:Real}; atol::Real=1e-10)::Float64
+    r = norm(r)
+    return r ≤ atol ? 0.0 : v.coff / r
 end
-function (v::RealCoulombPoint)(r::Real; atol::Real = 1e-10)::Float64
-	signbit(r) && error("r should be positive")
-	return r ≤ atol ? 0.0 : v.coff / r
+function (v::RealCoulombPoint)(r::Real; atol::Real=1e-10)::Float64
+    signbit(r) && error("r should be positive")
+    return r ≤ atol ? 0.0 : v.coff / r
 end
 """
 	RealCoulomb(:point; ϵ::Real = 1) -> RealCoulombPoint
@@ -28,10 +36,14 @@ julia> V = RealCoulomb(:point; ϵ = 1.5)
 julia> r = [1.0, 0.0, 0.0] # or r = 1.0
 julia> V(r)
 julia> V(0.01; atol = 0.1) == 0
+true
 ```
 """
-function RealCoulomb(::Val{:point}; ϵ::Real = 1.0)
-	@assert ϵ > 0 "ϵ should be positive"
-	coff = CoulombScale / ϵ
-	return RealCoulombPoint(ϵ, coff)
+function RealCoulomb(::Val{:point}; ϵ::Real=1.0,
+    α::Real=0.0,
+    r₀::Real=0.0, ϵ₁::Real=1.0, ϵ₂::Real=1.0,
+    a::Real=0.0)
+    @assert ϵ > 0 "ϵ should be positive"
+    coff = CoulombScale / ϵ
+    return RealCoulombPoint(ϵ, coff, α, r₀, ϵ₁, ϵ₂, a)
 end

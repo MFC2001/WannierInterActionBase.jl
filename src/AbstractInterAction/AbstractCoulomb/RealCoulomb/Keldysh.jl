@@ -1,25 +1,24 @@
 #趋于1/r，但很慢，几百倍r₀
 struct RealCoulombKeldysh <: RealCoulomb
-	r₀::Float64
-	ϵ₁::Float64
-	ϵ₂::Float64
-	coff::Float64
+    r₀::Float64
+    ϵ₁::Float64
+    ϵ₂::Float64
+    coff::Float64
 end
-function (v::RealCoulombKeldysh)(r::AbstractVector{<:Real}; atol::Real = 1e-10, calc::Symbol = :QuadOsc)::Float64
-	r = norm(r)
-	return r ≤ atol ? 0.0 : _RealCoulombKeldysh(Val(calc), v, r)
+function (v::RealCoulombKeldysh)(r::AbstractVector{<:Real}; atol::Real=1e-10, calc::Symbol=:QuadOsc)::Float64
+    r = norm(r)
+    return r ≤ atol ? 0.0 : _RealCoulombKeldysh(Val(calc), v, r)
 end
-function (v::RealCoulombKeldysh)(r::Real; atol::Real = 1e-10, calc::Symbol = :QuadOsc)::Float64
-	signbit(r) && error("r should be positive")
-	return r ≤ atol ? 0.0 : _RealCoulombKeldysh(Val(calc), v, r)
+function (v::RealCoulombKeldysh)(r::Real; atol::Real=1e-10, calc::Symbol=:QuadOsc)::Float64
+    signbit(r) && error("r should be positive")
+    return r ≤ atol ? 0.0 : _RealCoulombKeldysh(Val(calc), v, r)
 end
 # QuadGK方法不适用于J₀函数积分, 计算耗时较长且存在误差。
 # QuadOsc方法计算耗时和结果基本与Struve.jl相同。
 function _RealCoulombKeldysh(::Val{:QuadOsc}, v, r)::Float64
-	r = r / v.r₀
-	integrand(x) = besselj0(x) / (r + x)
-	result, err = quadosc(integrand, 0.0, Inf, besselj0_zero_approx; rtol = 1e-8, atol = 1e-10)
-	return v.coff * result
+    integrand(x) = besselj0(x) / (r + v.r₀ * x)
+    result, err = quadosc(integrand, 0.0, Inf, besselj0_zero_approx; rtol=1e-8, atol=1e-10)
+    return v.coff * result
 end
 besselj0_zero_approx(n) = π * (n - 0.25)
 """
@@ -45,15 +44,11 @@ julia> V(r; calc = :Struve)
 ```
 Note V(0) = 0 here, and can calculate more quickly and accurately by `using Struve` in Main.
 """
-function RealCoulomb(::Val{:keldysh}; r₀::Real = 0, ϵ₁::Real = 1, ϵ₂::Real = 1, atol::Real = 1e-10)
-	@assert r₀ ≥ 0 "r₀ should be positive"
-	@assert ϵ₁ > 0 "ϵ₁ should be positive"
-	@assert ϵ₂ > 0 "ϵ₂ should be positive"
-	ϵd = (ϵ₁ + ϵ₂) / 2
-	if r₀ ≤ atol
-		return RealCoulomb(Val(:point); ϵ = ϵd)
-	else
-		coff = CoulombScale / (ϵd * r₀)
-		return RealCoulombKeldysh(r₀, ϵ₁, ϵ₂, coff)
-	end
+function RealCoulomb(::Val{:keldysh}; r₀::Real=0.0, ϵ₁::Real=1.0, ϵ₂::Real=1.0)
+    @assert r₀ ≥ 0 "r₀ should be positive"
+    @assert ϵ₁ > 0 "ϵ₁ should be positive"
+    @assert ϵ₂ > 0 "ϵ₂ should be positive"
+    ϵd = (ϵ₁ + ϵ₂) / 2
+    coff = CoulombScale / ϵd
+    return RealCoulombKeldysh(r₀, ϵ₁, ϵ₂, coff)
 end
