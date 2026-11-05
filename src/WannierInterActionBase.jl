@@ -12,26 +12,24 @@ using SpecialFunctions
 using Dates: Dates
 using Requires
 
-#core
+# core
 using StaticArrays
 using StructEquality
 
-#algrism
+# integral
 using QuadGK
 using QuadOsc
 using HCubature
-using Optim
-using ADTypes
 
-#io
+# io
 using DelimitedFiles
 using Printf
 
+# data file format
 using HDF5
 using JLD2
 using NCDatasets
 using NPZ
-
 using FortranFiles
 using XML: XML
 

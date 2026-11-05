@@ -8,5 +8,4 @@ abstract type AbstractInterAction end
 
 include("./AbstractCoulomb/AbstractCoulomb.jl")
 include("./DirectInterAction/DirectInterAction.jl")
-include("./MirrorCorrection/MirrorCorrection.jl")
 include("./PairInterAction/PairInterAction.jl")

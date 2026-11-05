@@ -4,7 +4,6 @@ include("./_getU_out_of_rcut.jl")
 include("./Gauss.jl")
 include("./KeldyshGauss.jl")
 
-#TODO:输入head的方法有问题，截断库伦势和高斯库伦势中除发散项外均可能含有常数项，需要额外计入。
 #TODO: 或许需要带着相位因子展开。
 
 """
