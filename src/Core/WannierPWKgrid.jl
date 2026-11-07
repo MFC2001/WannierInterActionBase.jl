@@ -39,16 +39,13 @@ function Base.setproperty!(wave::WannierPWKgrid{WT}, name::Symbol, value) where 
         error("Only allow to change the fft_grid of WannierPWKgrid!")
     end
 end
-function WannierPWKgrid(kgrid::Union{MonkhorstPack,RedKgrid}, components::Vector{Matrix{WT}},
+function WannierPWKgrid(kgrid::RedKgrid, components::Vector{Matrix{WT}},
     Gidx::Vector{Vector{Int}}, Glist::Vector{ReducedCoordinates{Int}}, lattice::Lattice;
     nspinor::Integer=1, fft_grid=(0, 0, 0), period=[true, true, true],
 ) where {WT<:Number}
     @assert (nspinor == 1 || nspinor == 2) "nspinor must be 1 or 2, got $nspinor"
     check_lattice_period(lattice, period)
     # 对于 nspinor=2 的旋量波函数，要求前半和后半为不同自旋。
-    if kgrid isa MonkhorstPack
-        kgrid = RedKgrid(kgrid)
-    end
     nk = length(kgrid)
     nw = size(components[1], 2)
     nG = length.(Gidx)
