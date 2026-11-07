@@ -10,6 +10,11 @@ end
 function (int::PairInterAction_U)(A::AbstractMatrix{<:Number}, k::AbstractVector{<:Real}, args...; kwargs...)
     return int.Uint(A, k, args...; kwargs...)
 end
+"""
+    PairInterAction(Uint::DirectInterAction)
+
+Only contain direct-type interaction.
+"""
 function PairInterAction(Uint::DirectInterAction; pair=nothing, atol::Real=0.0)
     nw = numorb(Uint)
     pR = [ReducedCoordinates{Int}(0, 0, 0)]

@@ -10,6 +10,12 @@ function (int::PairInterAction_empty)(A::AbstractMatrix{<:Number}, k::AbstractVe
     size(A) == (0, 0) || error("Buffer size mismatch.")
     return A
 end
+"""
+    PairInterAction(nw::Integer)
+
+Construct an empty `PairInterAction`.
+Make sure that `nw` is correct.
+"""
 function PairInterAction(nw::Integer; pair=nothing, atol::Real=0.0)
     pR = ReducedCoordinates{Int}[]
     pU = NTuple{3,Int}[]

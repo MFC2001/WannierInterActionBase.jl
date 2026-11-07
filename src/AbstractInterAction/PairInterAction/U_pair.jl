@@ -18,6 +18,14 @@ function (int::PairInterAction_U_pair)(A::AbstractMatrix{<:Number}, k::AbstractV
     A[int.U_index, int.U_index] .= Umat
     return A
 end
+"""
+    PairInterAction(Uint::DirectInterAction, pairint::PairIntHR; pair=nothing, atol::Real=0.0)
+
+Construct an object containing all interactions.
+
+- `pair`: a vector of `(i, j, R)`, where `i` and `j` are Wannier indices and `R` is a 3-vector of integers. If given, only interactions for these pairs are retained. See also [`filter_pair`](@ref).
+- `atol`: entries in `pairint` with absolute value below `atol` are discarded. See also [`prune`](@ref).
+"""
 function PairInterAction(Uint::DirectInterAction, pairint::PairIntHRFull{T}; pair=nothing, atol::Real=0.0) where {T}
     nw = numorb(Uint)
     @assert numorb(pairint) == nw "Mismatched direct-type and pair-type interaction."
