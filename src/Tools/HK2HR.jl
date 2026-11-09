@@ -1,6 +1,3 @@
-"""
-	HK2HR
-"""
 function HK2HR(Hk::AbstractArray{<:Number}, kgrid::RedKgrid; kwargs...)
 
     nk = size(Hk, 3)
@@ -8,9 +5,17 @@ function HK2HR(Hk::AbstractArray{<:Number}, kgrid::RedKgrid; kwargs...)
 
     return HK2HR(Hk, kgrid; kwargs...)
 end
-function HK2HR(Hk::AbstractVector{<:AbstractMatrix{<:Number}}, kgrid::RedKgrid, lattice::Lattice;
-    grid_atol::Real=sqrt(eps(Float64)),
-)
+"""
+    HK2HR(Hk::AbstractVector{<:AbstractMatrix{<:Number}}, kgrid::RedKgrid, lattice::Union{AbstractMatrix{<:Real}, Lattice}; grid_atol::Real=1e-6) -> HRFull
+
+Transform the k-space Hamiltonian into real space when changing from the band basis to the Wannier basis.
+
+`Hk` contains the Hamiltonian matrix at each k point in the Fourier-transform basis, 
+obtained by transforming the diagonal band-basis Hamiltonian into that basis. 
+The real-space lattice vectors are determined by calling `gridindex(:WignerSeitz, lattice, kgrid.kgrid_size; atol = grid_atol)`. 
+A Fourier transform is then performed to obtain the real-space hopping terms, which are returned as an `HRFull` instance.
+"""
+function HK2HR(Hk::AbstractVector{<:AbstractMatrix{<:Number}}, kgrid::RedKgrid, lattice::Union{AbstractMatrix{<:Real},Lattice}; grid_atol::Real=1e-6)
     @assert length(Hk) == length(kgrid) "Mismatched Hk and kgrid!"
 
     R, ndegen = gridindex(Val(:WignerSeitz), lattice, kgrid.kgrid_size; atol=grid_atol)

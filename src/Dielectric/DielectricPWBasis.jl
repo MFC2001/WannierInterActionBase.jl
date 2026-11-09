@@ -1,4 +1,9 @@
 export DielectricPWBasis, eps0sym
+"""
+	DielectricPWBasis{ET <: Number}
+
+Dielectric matrix in plane-wave basis, on irreducible k-points.
+"""
 struct DielectricPWBasis{ET <: Number} <: AbstractDielectric
 	# basic
 	qgrid::RedKgrid # nq_re, q_re
@@ -140,20 +145,20 @@ function eps0sym(eps::DielectricPWBasis{ET}) where {ET}
 	# 见BerkeleyGW.
 	error("To be continued!")
 end
-"""
+# """
 
--`matrices`::Matrix{Matrix{<:Number}}
--`qirre`::Vector{ReducedCoordinates{Rational{Int}}}
--`Glist_qirre`::Vector{Vector{ReducedCoordinates{Int}}}
--`matrices_q0`::Matrix{Matrix{<:Number}}
--`q₀`::Vector{CartesianCoordinates{Float64}}
--`Glist_q0`::Vector{ReducedCoordinates{Int}}
--`qgrid`::RedKgrid
--`ωgrid`::Union{Number, Vector{<:Number}}
--`syms`::Vector{SymOp}
+# -`matrices`::Matrix{Matrix{<:Number}}
+# -`qirre`::Vector{ReducedCoordinates{Rational{Int}}}
+# -`Glist_qirre`::Vector{Vector{ReducedCoordinates{Int}}}
+# -`matrices_q0`::Matrix{Matrix{<:Number}}
+# -`q₀`::Vector{CartesianCoordinates{Float64}}
+# -`Glist_q0`::Vector{ReducedCoordinates{Int}}
+# -`qgrid`::RedKgrid
+# -`ωgrid`::Union{Number, Vector{<:Number}}
+# -`syms`::Vector{SymOp}
 
--`lattice`::Lattice{<:Real}
-"""
+# -`lattice`::Lattice{<:Real}
+# """
 function DielectricPWBasis(matrices, qirre, Glist_qirre, matrices_q0, q₀, Glist_q0, qgrid, ωgrid, syms, lattice)
 	if ωgrid isa Number
 		ωgrid = [ωgrid]

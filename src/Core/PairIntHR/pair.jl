@@ -26,8 +26,20 @@ const WanIntPairType = Union{WanIntPairVecType,WanIntPairIdxType}
 """
 	atom2orbpair(cell::Cell, rcut::Real, atom_orb_index; shell_tol::Real = 1e-6)
 
-Generate `atompair` firstly, then call atom2orbpair(atompair, atom_orb_index).
-
+Generate `atompair` using `findneighbors` firstly, then call atom2orbpair(atompair, atom_orb_index).
+"""
+function atom2orbpair(cell::Cell, rcut::Real,
+    atom_orb_index::AbstractVector{<:AbstractVector{<:Integer}}; shell_tol::Real=1e-6)
+    # Generate atom pairs firstly.
+    neighborlist, neighbordist = findneighbors(cell, rcut; shell_tol)
+    atom_pair = Iterators.flatten(Iterators.flatten(neighborlist))
+    atom_pair = map(atom_pair) do p
+        (p[1], p[2], ReducedCoordinates{Int}(p[3], p[4], p[5]))
+    end
+    # Obtain orbital pairs from atomic pairs.
+    return atom2orbpair(atom_pair, atom_orb_index)
+end
+"""
 	atom2orbpair(atompair, atom_orb_index)
 
 # Examples
@@ -44,17 +56,6 @@ julia> atom2orbpair(atompair, atom_orb_index)
  (2, 3, R[1, 0, 0])
 ```
 """
-function atom2orbpair(cell::Cell, rcut::Real,
-    atom_orb_index::AbstractVector{<:AbstractVector{<:Integer}}; shell_tol::Real=1e-6)
-    # Generate atom pairs firstly.
-    neighborlist, neighbordist = findneighbors(cell, rcut; shell_tol)
-    atom_pair = Iterators.flatten(Iterators.flatten(neighborlist))
-    atom_pair = map(atom_pair) do p
-        (p[1], p[2], ReducedCoordinates{Int}(p[3], p[4], p[5]))
-    end
-    # Obtain orbital pairs from atomic pairs.
-    return atom2orbpair(atom_pair, atom_orb_index)
-end
 function atom2orbpair(atom_pair::AbstractVector{<:WanIntPairVecType},
     atom_orb_index::AbstractVector{<:AbstractVector{<:Integer}})
     orbpair = Vector{Tuple{Int,Int,ReducedCoordinates{Int}}}(undef, 0)

@@ -1,10 +1,15 @@
 """
-	scissorslinearfit(band::AbstractMatrix{<:Real}, vindex, cindex;	cvfit::AbstractVector{<:Real} = zeros(Int, 6)) -> similar(band, Float64)
+    scissorslinearfit(band::AbstractMatrix{<:Real}, vindex, cindex;
+        cvfit::AbstractVector{<:Real} = zeros(6)) -> similar(band, Float64)
 
-cvfit = [evs, ev0, evdel, ecs, ec0, ecdel].
-ev_cor = ev_in + evs + evdel * (ev_in - ev0);
-ec_cor = ec_in + ecs + ecdel * (ec_in - ec0).
-You can also specify the parameters separately through `evs = 0.1`.
+Apply a scissors operator with a linear energy-dependent correction to `band`.
+
+The correction is
+- `ev_cor = ev_in + evs + evdel * (ev_in - ev0)` for valence bands,
+- `ec_cor = ec_in + ecs + ecdel * (ec_in - ec0)` for conduction bands.
+
+The six parameters are given by `cvfit = [evs, ev0, evdel, ecs, ec0, ecdel]`. 
+They may also be specified individually via the keyword arguments `evs, ev0, evdel, ecs, ecdel`, which override the corresponding entries of `cvfit`.
 """
 function scissorslinearfit(band::AbstractMatrix{<:Real}, vindex, cindex;
 	cvfit::AbstractVector{<:Real} = zeros(Int, 6),

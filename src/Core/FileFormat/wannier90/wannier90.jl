@@ -174,8 +174,10 @@ wannier90.amn
 (nband, nwannier, nk) = size(A)
 """
 struct wannier90_amn <: FileFormat end
-# TODO need more design
+# TODO mmn need more design
 """
+    wannier90_mmn <: FileFormat
+
 wannier90.mmn
 
 	write(path/io, M::AbstractArray{<:Number}, ::Type{wannier90_mmn}; nnkpts::AbstractMatrix{<:Integer})

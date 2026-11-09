@@ -32,7 +32,9 @@ function OpticalTransitionData(ΔE::AbstractVector{<:Real}, berryconnection::Abs
 end
 """
 	absorption(opt::OpticalTransitionData, ωgrid, ê=[0, 0, 1];
-		broadening=:gauss, fwhm=0.1, outfile=nothing) -> Vector
+		broadening::Symbol=:gauss, fwhm=0.1, outfile=nothing) -> Vector
+    absorption(opt::OpticalTransitionData, ωgrid::AbstractVector{<:Real}, μ::Integer, ν::Integer;
+        broadening::Symbol=:gauss, fwhm=0.1, outfile=nothing) -> Vector
 
 Return the imaginary part of the dielectric function ε₂(ω) on `ωgrid` (eV) from the
 vertical transitions in `opt`, for the light polarization `ê` in Cartesian coordinates
@@ -95,6 +97,8 @@ function _write_absorption(file, ωgrid, data)
 end
 """
 	optcond(opt::OpticalTransitionData, ωgrid, ê=[0, 0, 1];
+		broadening=:gauss, fwhm=0.1, outfile=nothing) -> Vector
+    optcond(opt::OpticalTransitionData, ωgrid, μ::Integer, ν::Integer;
 		broadening=:gauss, fwhm=0.1, outfile=nothing) -> Vector
 
 Return the optical conductivity σ(ω) on `ωgrid` (eV) for the polarization `ê` or, in the

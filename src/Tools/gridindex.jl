@@ -71,6 +71,18 @@ function gridindex(lattice::Union{AbstractMatrix{<:Real},AbstractLattice{<:Real}
 
     return R
 end
+"""
+    gridindex(:WignerSeitz, lattice, grid; atol::Real=1e-6, rtol::Real=atol>0 ? 0 : √eps()) -> (Rlist, ndegen)
+
+Given `lattice` and `grid`, construct the corresponding Wigner–Seitz supercell and return all lattice vectors within it together with their degeneracies.
+
+`lattice` gives the lattice vectors as columns; it may be a matrix or an `AbstractLattice`.
+`grid` is the grid size, e.g. `[7, 7, 1]` or `[5, 5, 3]`.
+`atol` and `rtol` are tolerances for testing whether lattice vectors are equivalent.
+
+Returns `(Rlist, ndegen)`, where `Rlist` is a list of integer lattice vectors in fractional coordinates and `ndegen` gives the degeneracy of each vector, 
+i.e. the number of equivalent boundary lattice vectors.
+"""
 function gridindex(::Val{:WignerSeitz}, lattice::Union{AbstractMatrix{<:Real},AbstractLattice{<:Real}}, grid;
     atol::Real=1e-6, rtol::Real=atol>0 ? 0 : √eps())
     Rrefs = gridindex(grid)

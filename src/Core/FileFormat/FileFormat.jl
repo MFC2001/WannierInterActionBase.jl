@@ -33,8 +33,8 @@ Read a band structure from a `BAND.dat` file or stream.
 - `kline::Kline`: k‑point path information. If `readkname=false`, returns a default [`Kline`](@ref).
 
 **Keyword arguments**:
-- `readkname::Bool=false`: If `true`, parse the `Kline` block from the file 
-(only present if the file was written by this package with a non‑empty `kline`).
+- `readkname::Bool=false`: If `true`, parse the `kline` block from the file 
+(only present if the file was written by this package with a non‑empty `kline` block).
 
 # Writing
     write(path::AbstractString, band, ::Type{BAND_dat}; mode="w", comment="", kline=Kline())

@@ -28,11 +28,11 @@ where `h` is the length of the longest basis vector. The cost therefore grows wi
 # Examples
 ```julia
 # A 2D kagome lattice whose nearest-neighbor distance is 1.
-cell = IdealCell(:kagome)
-neighborlist, neighbordist = findneighbors(cell, 1.0)
+julia> cell = IdealCell(:kagome);
+julia> neighborlist, neighbordist = findneighbors(cell, 1.0);
 
-neighbordist[1]     # [0.0, ≈1.0]: the self shell, then the nearest-neighbor shell
-neighborlist[1][2]  # the 4 nearest neighbors of atom 1, as (1, ja, Rx, Ry, Rz)
+julia> neighbordist[1];     # [0.0, ≈1.0]: the self shell, then the nearest-neighbor shell
+julia> neighborlist[1][2];  # the 4 nearest neighbors of atom 1, as (1, ja, Rx, Ry, Rz)
 ```
 """
 function findneighbors(cell::Cell{P}, maxdist::Real; shell_tol::Real = 1e-6) where {P}

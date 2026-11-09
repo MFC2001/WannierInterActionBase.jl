@@ -1,4 +1,13 @@
 export WannierPWKgrid, translate!
+"""
+    WannierPWKgrid{WT<:Number}
+
+Stores a set of Wannier functions expanded in a plane-wave basis.
+
+This type is immutable: its fields cannot be changed, except for the `fft_grid` field.
+
+See also [`QE_wannier`](@ref), [`translate!`](@ref).
+"""
 struct WannierPWKgrid{WT<:Number} # PWKgridStates{WT <: Number}
     nk::Int
     nw::Int
@@ -39,6 +48,27 @@ function Base.setproperty!(wave::WannierPWKgrid{WT}, name::Symbol, value) where 
         error("Only allow to change the fft_grid of WannierPWKgrid!")
     end
 end
+"""
+    WannierPWKgrid(kgrid::RedKgrid, components::Vector{Matrix{WT}},
+        Gidx::Vector{Vector{Int}}, Glist::Vector{ReducedCoordinates{Int}}, lattice::Lattice;
+        nspinor::Integer=1, fft_grid=(0, 0, 0), period=[true, true, true]) -> WannierPWKgrid{WT}
+
+Construct a `WannierPWKgrid` representing Wannier functions in a plane-wave basis.
+
+# Arguments
+- `kgrid`: Full k-point grid containing all k points.
+- `components`: Length-`nk` vector, where `nk` is the number of k points. 
+  `components[ik]` is an `[nG_k, nw]` matrix, with `nw` the number of Wannier functions and `nG_k` the number of plane waves at k point `ik`.
+- `Gidx`: Length-`nk` vector. `Gidx[ik]` is an integer vector of length `nG_k` giving indices into `Glist`. 
+  Its order must match the plane-wave basis order in `components[ik]`.
+- `Glist`: Complete G-vector list, i.e. the union of the plane-wave bases over all k points.
+- `lattice`: Lattice information.
+- `nspinor`: `1` for scalar or `2` for spinor. 
+  For `nspinor == 2`, `components[ik]` has size `[2nG_k, nw]`; rows `1:nG_k` and `nG_k+1:2nG_k` correspond to the two spinor components.
+- `fft_grid`: FFT grid size used in subsequent FFT-related operations.
+- `period`: Periodicity along each direction. Set according to the physical system. 
+  For example, for a monolayer nonperiodic in z, use `period = [true, true, false]`, even if the DFT calculation uses vacuum to maintain periodic boundary conditions.
+"""
 function WannierPWKgrid(kgrid::RedKgrid, components::Vector{Matrix{WT}},
     Gidx::Vector{Vector{Int}}, Glist::Vector{ReducedCoordinates{Int}}, lattice::Lattice;
     nspinor::Integer=1, fft_grid=(0, 0, 0), period=[true, true, true],
@@ -71,6 +101,13 @@ function WannierPWKgrid(kgrid::RedKgrid, components::Vector{Matrix{WT}},
         period, lattice, rlattice, ldot, rldot, Ω, rΩ,
     )
 end
+"""
+    (wave::WannierPWKgrid)(r::AbstractVector{<:Real}, R::AbstractVector{<:Integer}=ReducedCoordinates(0, 0, 0))
+
+Evaluate the Wannier functions stored in `wave` at position `r`, for the Wannier functions centered in cell `R`.
+
+Returns a vector of length `nw` if `wave.nspinor == 1`, or a `[2, nw]` matrix if `wave.nspinor == 2`.
+"""
 function (wave::WannierPWKgrid{WT})(r::AbstractVector{<:Real},
     R::AbstractVector{<:Integer}=ReducedCoordinates(0, 0, 0)) where {WT}
     r = ReducedCoordinates(r)
@@ -109,6 +146,13 @@ function (wave::WannierPWKgrid{WT})(r::AbstractVector{<:Real},
     end
     return wr
 end
+"""
+    (wave::WannierPWKgrid)(r::AbstractVector{<:Real}, Rlist::AbstractVector{<:AbstractVector{<:Integer}})
+
+Evaluate the Wannier functions stored in `wave` at position `r`, for the Wannier functions centered in each cell in `Rlist`.
+
+Returns an `[nw, nR]` array if `wave.nspinor == 1`, or a `[2, nw, nR]` array if `wave.nspinor == 2`, where `nR` is the length of `Rlist`.
+"""
 function (wave::WannierPWKgrid{WT})(r::AbstractVector{<:Real},
     Rlist::AbstractVector{<:AbstractVector{<:Integer}}) where {WT}
     r = ReducedCoordinates(r)
@@ -178,7 +222,8 @@ function (wave::WannierPWKgrid{WT})(::Val{:spin_polarization}) where {WT}
 end
 """
 	(wave::WannierPWKgrid)(::Val{:spin_index}; atol::Real = 1e-6) -> (upindex, dnindex)
-1 - |ψ_up^2 - ψ_dn^2| < atol, then ψ obtain a spin index.
+
+If 1 - |ψ_up^2 - ψ_dn^2| < atol, then ψ obtain a spin index.
 """
 function (wave::WannierPWKgrid)(::Val{:spin_index}; atol::Real=1e-6)
     @assert wave.nspinor == 2 "Only spinor wave function need to analyse spin structure!"
@@ -202,13 +247,19 @@ function (wave::WannierPWKgrid)(::Val{:spin_index}; atol::Real=1e-6)
     return spinindex
 end
 """
-	translate!(wave::WannierPWKgrid, centres::Pair{<:Integer, <:AbstractVector{<:Integer}}...)
+    translate!(wave::WannierPWKgrid, centres::Pair{<:Integer, <:AbstractVector{<:Integer}}...)
 
-You only need to input the wannier centres R which isn't in the [0, 0, 0] cell.
-Before, ψ_{i0} ∝ ∑_{k} ψ_{ik}, but ψ_{i-R} is in the [0, 0, 0] cell; 
-change the components in `wave` directly, make sure that ∑_{k} ψ′_{ik} is the [0, 0, 0] cell.
+Translate the specified Wannier functions so that their centres are placed in the `[0, 0, 0]` cell.
 
-See also `translate`.
+Only specify centres `R` that are not in the `[0, 0, 0]` cell. 
+This function directly modifies the `components` in `wave` so that `∑_k ψ′_{ik}` corresponds to the `[0, 0, 0]` cell.
+
+# Example
+If Wannier function 2, currently defined in the `[0, 0, 0]` cell, has its centre at `[1, 0, 0]`, call
+
+```julia
+translate!(wave, 2 => [1, 0, 0])
+```
 """
 function translate!(wave::WannierPWKgrid{WT},
     centres::Pair{<:Integer,<:AbstractVector{<:Integer}}...) where {WT}

@@ -126,6 +126,6 @@ Read wavefunctions and apply the unitary transformation matrix to obtain Wannier
 
 Use data from a `wannier90_chk` object to supply `bandindex` and `u_matrix`.
 
-See also [`FileFormat`](@ref), [`WannierPWKgrid`](@ref), [`wannier90_chk`](@ref).
+See also [`FileFormat`](@ref), [`WannierPWKgrid`](@ref), [`wannier90_chk`](@ref), [`wannierberri_chk`](@ref).
 """
 struct QE_wannier <: FileFormat end

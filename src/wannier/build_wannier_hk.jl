@@ -4,7 +4,7 @@
 
 Build the Wannier-basis Hamiltonian `H(k) = U(k)' * diag(bands[k]) * U(k)` for every
 k-point and return the vector of `nw × nw` Hermitian matrices. With a
-`wannier90_chk`, the bands of the outer window are selected automatically; otherwise
+`wannier90_chk`, the bands in the window are selected automatically; otherwise
 `bandindex[ik]` may restrict the bands used at each k-point.
 """
 function build_wannier_hk(bands::AbstractMatrix{<:Real}, chkdata::wannier90_chk)
